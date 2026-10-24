@@ -148,29 +148,35 @@
   .note { font-size: 0.84rem; color: var(--ink-3); margin-top: 16px; }
 
   /* pricing */
-  .tiers { display: grid; gap: 18px; margin-top: 48px; }
-  @media (min-width: 900px) { .tiers { grid-template-columns: repeat(3, 1fr); } }
-  .tier { padding: 28px; display: flex; flex-direction: column; min-width: 0; }
-  .tier .ic { width: 42px; height: 42px; border-radius: 12px; background: var(--bg); display: grid; place-items: center; }
-  .tier h3 { font-size: 1.35rem; margin-top: 22px; letter-spacing: -0.02em; }
-  .tier .when { font-size: 0.84rem; color: var(--accent); margin-top: 6px; font-weight: 500; }
-  .tier p { color: var(--ink-2); font-size: 0.95rem; margin-top: 14px; }
-  .tier .amount { margin-top: auto; padding-top: 26px; font-size: 1.6rem; font-weight: 500; letter-spacing: -0.04em; }
-  .tier .amount small { font-size: 0.85rem; color: var(--ink-3); letter-spacing: 0; font-weight: 400; }
-  .scope { list-style: none; margin: 18px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; font-size: 0.9rem; color: var(--ink-2); }
+  .tiers { display: grid; gap: 16px; margin-top: 48px; }
+  @media (min-width: 700px) { .tiers { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1120px) { .tiers { grid-template-columns: repeat(4, 1fr); } }
+  .tier { padding: 24px; display: flex; flex-direction: column; min-width: 0; }
+  .tier-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 24px; }
+  .stepno { font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .tag { font-size: 0.72rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  .tier h3 { font-size: 1.3rem; margin-top: 18px; letter-spacing: -0.02em; }
+  .tier .amount { margin-top: 10px; font-size: 2.2rem; font-weight: 500; letter-spacing: -0.045em; line-height: 1; display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+  .tier .amount small { font-size: 0.82rem; color: var(--ink-3); letter-spacing: 0; font-weight: 400; }
+  .tier p { color: var(--ink-2); font-size: 0.92rem; margin-top: 14px; }
+  .scope { list-style: none; margin: 18px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; font-size: 0.88rem; color: var(--ink-2); margin-bottom: 24px; }
   .scope li { display: grid; grid-template-columns: 16px 1fr; gap: 10px; align-items: start; }
   .scope svg { width: 16px; height: 16px; color: var(--accent); margin-top: 2px; stroke-width: 2.5; }
-  .tier-btn { align-self: flex-start; margin-top: 18px; font-size: 0.9rem; }
-  .bridge { display: inline-block; background: var(--accent-soft); border-radius: 10px; padding: 10px 14px; }
-  .head p.bridge { font-size: 0.93rem; margin-top: 20px; }
-  .bridge a { color: var(--accent); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+  .tier-btn { align-self: flex-start; margin-top: auto; font-size: 0.88rem; }
+  .tier.first { box-shadow: 0 0 0 1.5px var(--accent), var(--shadow); }
   .tier.dark { background: var(--navy); color: #fff; }
-  .tier.dark .scope { border-top-color: rgba(255,255,255,.14); color: rgba(255,255,255,.8); }
+  .tier.dark .stepno, .tier.dark .amount small { color: rgba(255,255,255,.6); }
+  .tier.dark p { color: rgba(255,255,255,.75); }
+  .tier.dark .tag { background: rgba(255,163,107,.16); color: #ffa36b; }
+  .tier.dark .scope { border-top-color: rgba(255,255,255,.14); color: rgba(255,255,255,.82); }
   .tier.dark .scope svg { color: #ffa36b; }
   .tier.dark .pill { background: #fff; color: var(--ink); box-shadow: none; }
-  .tier.dark .ic { background: rgba(255,255,255,.1); }
-  .tier.dark p, .tier.dark .amount small { color: rgba(255,255,255,.72); }
-  .tier.dark .when { color: #ffa36b; }
+
+  /* pilot flow */
+  .flow { list-style: none; margin: 24px 0 0; padding: 16px 0 0; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 6px; counter-reset: f; font-size: 0.84rem; color: var(--ink-2); }
+  .flow li { counter-increment: f; display: inline-flex; align-items: center; gap: 6px; }
+  .flow li::before { content: counter(f); width: 20px; height: 20px; border-radius: 50%; background: var(--bg); color: var(--ink); font-weight: 600; font-size: 0.72rem; display: inline-grid; place-items: center; }
+  .flow li:not(:last-child)::after { content: "→"; color: var(--ink-4); margin-left: 4px; }
 
   /* process */
   .steps { display: grid; gap: 18px; margin-top: 48px; counter-reset: s; }
@@ -270,7 +276,7 @@
     </nav>
     <div class="nav-right">
       <a class="mail" href="mailto:hello@agentfirewall.app">Contact</a>
-      <a class="pill plain" href="mailto:hello@agentfirewall.app?subject=15-scenario%20assessment&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20book%20the%20%24150%2015-scenario%20assessment.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0AAnything%20off%20limits%20for%20testing%3A%0AWho%20should%20get%20the%20report%20%28name%20and%20email%29%3A%0ABilling%20name%20/%20company%20for%20the%20invoice%3A%0A%0AThanks%2C%0A" data-checkout>Start the pilot</a>
+      <a class="pill plain" href="mailto:hello@agentfirewall.app?subject=15-scenario%20assessment&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20request%20the%20%24150%2015-scenario%20assessment.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0AAnything%20off%20limits%20for%20testing%3A%0AWho%20should%20get%20the%20report%20%28name%20and%20email%29%3A%0ABilling%20name%20/%20company%20for%20the%20invoice%3A%0A%0AThanks%2C%0A">Request the pilot</a>
     </div>
   </div>
 </header>
@@ -283,7 +289,7 @@
       <h1>Find Where Your AI Agent Breaks.</h1>
       <p class="lede rise" style="--d:380ms">We test the agents your business trusts with money, data and customer promises, then show you exactly how to fix what we find.</p>
       <div class="actions rise" style="--d:480ms">
-        <a class="pill" href="mailto:hello@agentfirewall.app?subject=15-scenario%20assessment&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20book%20the%20%24150%2015-scenario%20assessment.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0AAnything%20off%20limits%20for%20testing%3A%0AWho%20should%20get%20the%20report%20%28name%20and%20email%29%3A%0ABilling%20name%20/%20company%20for%20the%20invoice%3A%0A%0AThanks%2C%0A" data-checkout>Start the $150 assessment <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
+        <a class="pill" href="mailto:hello@agentfirewall.app?subject=15-scenario%20assessment&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20request%20the%20%24150%2015-scenario%20assessment.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0AAnything%20off%20limits%20for%20testing%3A%0AWho%20should%20get%20the%20report%20%28name%20and%20email%29%3A%0ABilling%20name%20/%20company%20for%20the%20invoice%3A%0A%0AThanks%2C%0A">Request the $150 assessment <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
       </div>
       <div class="proof rise" style="--d:580ms">
         <div class="stack" aria-hidden="true">
@@ -291,7 +297,7 @@
           <span><svg class="i"><use href="#i-file"/></svg></span>
           <span class="hot"><svg class="i"><use href="#i-lock"/></svg></span>
         </div>
-        <p><b>Report in 48 hours</b><br>No customer data touched, ever</p>
+        <p><b>Report in 48 hours</b> once scope is agreed<br>No customer data touched, ever</p>
       </div>
     </div>
 
@@ -375,14 +381,16 @@
       </div>
       <ul class="ticks">
         <li><span class="t"><svg class="i"><use href="#i-check"/></svg></span><div><b>15 scenarios agreed with you</b>Instruction overrides, money actions, data access and approval gaps.</div></li>
-        <li><span class="t"><svg class="i"><use href="#i-check"/></svg></span><div><b>One-page report in 48 hours</b>Every verified finding mapped to a concrete fix.</div></li>
+        <li><span class="t"><svg class="i"><use href="#i-check"/></svg></span><div><b>One-page report in 48 hours</b>Counted from agreed scope and payment. Every verified finding mapped to a concrete fix.</div></li>
         <li><span class="t"><svg class="i"><use href="#i-check"/></svg></span><div><b>Public demo or authorized access only</b>No customer data, no signup tricks, no surprises.</div></li>
         <li><span class="t"><svg class="i"><use href="#i-check"/></svg></span><div><b>Credited in full</b>The whole $150 counts toward the $1,500 audit if you go deeper.</div></li>
       </ul>
       <div class="actions">
-        <a class="pill" href="mailto:hello@agentfirewall.app?subject=15-scenario%20assessment&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20book%20the%20%24150%2015-scenario%20assessment.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0AAnything%20off%20limits%20for%20testing%3A%0AWho%20should%20get%20the%20report%20%28name%20and%20email%29%3A%0ABilling%20name%20/%20company%20for%20the%20invoice%3A%0A%0AThanks%2C%0A" data-checkout>Start the assessment <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
-        <span class="fine" id="checkoutNote">Opens a pre-filled email. We confirm the scope, then send your $150 invoice.</span>
+        <a class="pill" href="mailto:hello@agentfirewall.app?subject=15-scenario%20assessment&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20request%20the%20%24150%2015-scenario%20assessment.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0AAnything%20off%20limits%20for%20testing%3A%0AWho%20should%20get%20the%20report%20%28name%20and%20email%29%3A%0ABilling%20name%20/%20company%20for%20the%20invoice%3A%0A%0AThanks%2C%0A">Request the assessment <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
       </div>
+      <ol class="flow" aria-label="How the pilot works">
+        <li>Send details</li><li>Agree 15 scenarios</li><li>Zoho invoice</li><li>Report in 48 hours</li>
+      </ol>
     </div>
   </div>
 </section>
@@ -414,35 +422,42 @@
 <section class="block" id="pricing">
   <div class="wrap">
     <div class="head">
-      <span class="kicker"><b>Pricing</b> Three ways in</span>
+      <span class="kicker"><b>Pricing</b> Talk first, then invoice</span>
       <h2>Start Small. Go Deeper If You Need To.</h2>
-      <p>Every engagement is consent-based: you show us how your agents work, and we only work inside the access you give us.</p>
-      <p class="bridge">Already ran the <a href="#pilot">$150 pilot</a>? It counts in full toward the Security Audit.</p>
+      <p>Every engagement starts with a short scoping email or 15-minute call. You only get a Zoho invoice once the scope is agreed, and we only work inside the access you give us.</p>
     </div>
     <div class="tiers">
+      <div class="card tier first">
+        <div class="tier-top"><span class="stepno">Step 1</span><span class="tag">Start here</span></div>
+        <h3>Pilot</h3>
+        <div class="amount">$150<small>one time</small></div>
+        <p>A 15-scenario assessment that tells you where your agent stands.</p>
+        <ul class="scope"><li><svg class="i"><use href="#i-check"/></svg>15 scenarios agreed with you</li><li><svg class="i"><use href="#i-check"/></svg>One-page report in 48 hours</li></ul>
+        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=15-scenario%20assessment&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20request%20the%20%24150%2015-scenario%20assessment.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0AAnything%20off%20limits%20for%20testing%3A%0AWho%20should%20get%20the%20report%20%28name%20and%20email%29%3A%0ABilling%20name%20/%20company%20for%20the%20invoice%3A%0A%0AThanks%2C%0A">Request the pilot <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
+      </div>
       <div class="card tier">
-        <span class="ic"><svg class="i"><use href="#i-scan"/></svg></span>
-        <h3>Workflow Testing</h3><div class="when">A quick read on where you stand</div>
-        <p>We run your agent through scenarios we agree on together and report every place it does something it shouldn't.</p>
+        <div class="tier-top"><span class="stepno">Step 2</span></div>
+        <h3>Workflow Testing</h3>
+        <div class="amount"><small>from</small>$300<small></small></div>
+        <p>We run your agent through scenarios we agree on together.</p>
         <ul class="scope"><li><svg class="i"><use href="#i-check"/></svg>Scenarios agreed with you up front</li><li><svg class="i"><use href="#i-check"/></svg>Every place it does something it shouldn&#39;t, reported</li></ul>
-        <div class="amount"><small>from</small> $300</div>
-        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Workflow%20testing&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20book%20workflow%20testing.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Book workflow testing <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
+        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Workflow%20testing&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20request%20workflow%20testing.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Request testing <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
       </div>
       <div class="card tier dark">
-        <span class="ic"><svg class="i"><use href="#i-shield"/></svg></span>
-        <h3>Security Audit</h3><div class="when">The full picture</div>
-        <p>You walk us through how your business uses agents. We map every weakness into a plain-language report, ranked by severity, with fixes.</p>
+        <div class="tier-top"><span class="stepno">Step 3</span><span class="tag">$150 pilot credited</span></div>
+        <h3>Security Audit</h3>
+        <div class="amount"><small>from</small>$1,500<small></small></div>
+        <p>You walk us through how your business uses agents. We map every weakness.</p>
         <ul class="scope"><li><svg class="i"><use href="#i-check"/></svg>Every weakness ranked by severity</li><li><svg class="i"><use href="#i-check"/></svg>Plain-language report with the exact fixes</li></ul>
-        <div class="amount"><small>from</small> $1,500</div>
-        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Security%20audit&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20book%20the%20security%20audit.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Book the audit <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
+        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Security%20audit&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20request%20the%20security%20audit.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Request the audit <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
       </div>
       <div class="card tier">
-        <span class="ic"><svg class="i"><use href="#i-lock"/></svg></span>
-        <h3>Safety Setup</h3><div class="when">Fixes that stay fixed</div>
-        <p>Approval gates, blocked actions and audit logs around the automations you already run, plus monitoring as your agent changes.</p>
+        <div class="tier-top"><span class="stepno">Step 4</span></div>
+        <h3>Safety Setup</h3>
+        <div class="amount">$500<small>setup + monthly</small></div>
+        <p>Guardrails around the automations you already run.</p>
         <ul class="scope"><li><svg class="i"><use href="#i-check"/></svg>Approval gates, blocked actions and audit logs</li><li><svg class="i"><use href="#i-check"/></svg>Re-tested to prove each gap is closed, then monitored</li></ul>
-        <div class="amount">$500 <small>setup + monthly</small></div>
-        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Safety%20setup&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20set%20up%20guardrails%20for%20our%20agent.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Set up guardrails <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
+        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Safety%20setup&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20request%20a%20safety%20setup%20for%20our%20agent.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Request a setup <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
       </div>
     </div>
   </div>
@@ -501,16 +516,6 @@
 </footer>
 
 <script>
-  // Payment link for the $150 assessment (e.g. the Zoho Invoice / payment page).
-  // Leave empty to keep the pre-filled email; set it and every "Start" button points there.
-  var CHECKOUT_URL = '';
-  (function () {
-    if (!CHECKOUT_URL) return;
-    [].forEach.call(document.querySelectorAll('[data-checkout]'), function (a) { a.href = CHECKOUT_URL; });
-    var note = document.getElementById('checkoutNote');
-    if (note) note.textContent = 'Pay the $150 invoice online, then we email you to agree the 15 scenarios.';
-  })();
-
   (function () {
     var root = document.documentElement;
     if (!root.classList.contains('js')) return;
