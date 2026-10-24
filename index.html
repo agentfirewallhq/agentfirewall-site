@@ -63,15 +63,11 @@
   .proof p { font-size: 0.84rem; color: var(--ink-2); line-height: 1.4; }
   .proof p b { color: var(--ink); font-weight: 600; }
 
-  .visual { position: relative; display: grid; place-items: center; min-height: 360px; }
-  .visual svg.traces { position: absolute; inset: -10% -30%; width: 160%; height: 120%; color: var(--ink-4); }
+  .visual { position: relative; z-index: 1; display: grid; place-items: center; min-height: 360px; }
+  .hero-grid > div:first-child, .side { position: relative; z-index: 2; }
   .shield { position: relative; width: min(64%, 360px); }
   .visual img { display: block; width: 100%; height: auto; filter: drop-shadow(0 40px 40px rgba(20,28,69,.22)) drop-shadow(0 8px 12px rgba(20,28,69,.12)); }
   @media (min-width: 1040px) { .shield { width: min(78%, 360px); } }
-  .wire { position: absolute; top: 41%; width: 72px; height: 8px; overflow: visible; fill: none; stroke: var(--ink-4); stroke-width: 1.5; }
-  .wire circle { fill: var(--card); }
-  .wire.l { right: 100%; margin-right: -8px; }
-  .wire.r { left: 100%; margin-left: -8px; transform: scaleX(-1); }
   .visual::after { content: ""; position: absolute; bottom: 4%; left: 50%; width: 46%; height: 26px; transform: translateX(-50%); background: radial-gradient(ellipse at center, rgba(20,28,69,.18), transparent 70%); filter: blur(4px); }
 
   .side { display: grid; gap: 18px; align-content: center; }
@@ -227,11 +223,13 @@
   .js .shield { opacity: 0; transform: scale(.965); }
   .js.loaded .shield { opacity: 1; transform: none; transition: opacity .8s var(--out) .15s, transform 1.2s var(--out) .15s; }
 
-  /* a pulse of light runs in along the left wire, the check glows, a pulse runs out on the right */
+  /* circuit wires around the shield; pulses run in on the left and top, out on the right and bottom */
   .shield img { position: relative; z-index: 2; }
-  .traffic { position: absolute; left: -72px; right: -72px; top: calc(41% + 4px); height: 0; z-index: 1; pointer-events: none; }
-  .pulse { position: absolute; left: 0; top: 0; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #ffb066; box-shadow: 0 0 6px 2px rgba(239,100,32,.55); opacity: 0; will-change: transform, opacity; }
-  .pulse::before { content: ""; position: absolute; right: 3px; top: 50%; width: 30px; height: 2px; margin-top: -1px; border-radius: 2px; background: linear-gradient(90deg, rgba(239,100,32,0), rgba(239,100,32,.8)); }
+  .circuit { position: absolute; left: -140px; top: -80px; overflow: visible; z-index: 1; pointer-events: none; fill: none; stroke: var(--ink-4); stroke-width: 1; }
+  .circuit circle { fill: var(--card); stroke-width: 1.25; }
+  .beam { fill: none; stroke: var(--accent); stroke-linecap: round; }
+  .beam.tail { stroke-width: 1.5; opacity: .45; }
+  .beam.head { stroke-width: 2.2; stroke: #ff9a4d; }
   .glow { position: absolute; left: 54%; top: 45%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255,170,90,.55) 0%, rgba(255,140,50,.18) 35%, rgba(255,140,50,0) 62%); mix-blend-mode: screen; opacity: 0; z-index: 3; pointer-events: none; }
   .checks li { transition: color .3s ease; }
   .checks li::before { transition: background-color .3s ease, box-shadow .3s ease, transform .3s var(--spring); }
@@ -307,30 +305,8 @@
     </div>
 
     <div class="visual" aria-hidden="true">
-      <svg class="traces" viewBox="0 0 800 600" fill="none" stroke="currentColor" stroke-width="1" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <radialGradient id="fade" cx="50%" cy="50%" r="50%"><stop offset="30%" stop-color="#fff" stop-opacity="1"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>
-          <mask id="m"><rect width="800" height="600" fill="url(#fade)"/></mask>
-        </defs>
-        <g mask="url(#m)">
-          <path d="M80 140h120l30 30h90"/><circle cx="80" cy="140" r="3"/>
-          <path d="M40 220h140l24 24h96"/><circle cx="40" cy="220" r="3"/>
-          <path d="M60 300h230"/><circle cx="60" cy="300" r="3"/>
-          <path d="M40 380h140l24-24h96"/><circle cx="40" cy="380" r="3"/>
-          <path d="M80 460h120l30-30h90"/><circle cx="80" cy="460" r="3"/>
-          <path d="M720 140H600l-30 30h-90"/><circle cx="720" cy="140" r="3"/>
-          <path d="M760 220H620l-24 24h-96"/><circle cx="760" cy="220" r="3"/>
-          <path d="M740 300H510"/><circle cx="740" cy="300" r="3" stroke="#ef6420"/>
-          <path d="M760 380H620l-24-24h-96"/><circle cx="760" cy="380" r="3"/>
-          <path d="M720 460H600l-30-30h-90"/><circle cx="720" cy="460" r="3"/>
-          <path d="M400 40v60M360 60v50M440 60v50" stroke-dasharray="2 6"/>
-          <path d="M400 500v60M360 490v50M440 490v50" stroke-dasharray="2 6"/>
-        </g>
-      </svg>
       <div class="shield">
-        <svg class="wire l" viewBox="0 0 72 8"><path d="M4 4H72"/><circle cx="4" cy="4" r="2.5"/></svg>
-        <svg class="wire r" viewBox="0 0 72 8"><path d="M4 4H72"/><circle cx="4" cy="4" r="2.5"/></svg>
-        <div class="traffic" aria-hidden="true"></div>
+        <svg class="circuit" aria-hidden="true"></svg>
         <img src="assets/hero-shield.webp" alt="" width="720" height="844">
         <span class="glow" aria-hidden="true"></span>
       </div>
@@ -523,6 +499,71 @@
 </footer>
 
 <script>
+  // Circuit wires around the shield, drawn in pixels so they fit the space
+  // available at any width. Left and top wires run into the shield; right and
+  // bottom wires run out. The middle pair is the one the checklist follows.
+  (function () {
+    var svg = document.querySelector('.circuit');
+    var shield = document.querySelector('.shield');
+    var visual = document.querySelector('.visual');
+    var NS = 'http://www.w3.org/2000/svg', OX = 140, OY = 80;
+    function line(d, role) {
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', d); p.setAttribute('class', 'tr');
+      if (role) p.setAttribute('data-role', role);
+      svg.appendChild(p);
+    }
+    function dot(x, y) {
+      var c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', 2.5);
+      svg.appendChild(c);
+    }
+    function draw() {
+      var W = shield.offsetWidth, H = shield.offsetHeight;
+      if (!W || !H) return;
+      // Room for the wires: beside the shield when the hero is stacked, else
+      // the clear space between the end of the copy and the shield's edge.
+      var room = (visual.clientWidth - W) / 2 - 6;
+      var copy = document.querySelector('.hero-grid > div:first-child');
+      var sr = shield.getBoundingClientRect(), cr = copy.getBoundingClientRect();
+      if (cr.bottom <= sr.top + 1 === false && cr.right < sr.left) {
+        var edge = 0;
+        [].forEach.call(copy.children, function (el) {
+          var r = document.createRange(); r.selectNodeContents(el);
+          edge = Math.max(edge, r.getBoundingClientRect().right);
+        });
+        room = sr.left - edge - 24;
+      }
+      var G = Math.max(40, Math.min(120, room));
+      svg.setAttribute('width', W + 2 * OX); svg.setAttribute('height', H + 2 * OY);
+      svg.setAttribute('viewBox', '0 0 ' + (W + 2 * OX) + ' ' + (H + 2 * OY));
+      svg.innerHTML = '';
+      var L = OX, R = OX + W, bend = G * 0.5;
+      [[0.22, -16], [0.32, 12], [0.41, 0], [0.50, -12], [0.60, 16]].forEach(function (w) {
+        var y = OY + w[0] * H, dy = w[1], k = Math.abs(dy);
+        var main = w[0] === 0.41;
+        // in, from the outside to the shield
+        line(dy ? 'M' + (L - G) + ' ' + (y + dy) + 'H' + (L - bend - k) + 'L' + (L - bend) + ' ' + y + 'H' + (L + 0.18 * W)
+                : 'M' + (L - G) + ' ' + y + 'H' + (L + 0.18 * W), main ? 'main-in' : 'in');
+        dot(L - G, y + dy);
+        // out, from the shield to the outside
+        line(dy ? 'M' + (R - 0.18 * W) + ' ' + y + 'H' + (R + bend) + 'L' + (R + bend + k) + ' ' + (y + dy) + 'H' + (R + G)
+                : 'M' + (R - 0.18 * W) + ' ' + y + 'H' + (R + G), main ? 'main-out' : 'out');
+        dot(R + G, y + dy);
+      });
+      [[0.5, 0.06], [0.34, 0.16], [0.66, 0.16]].forEach(function (t) {
+        var x = OX + t[0] * W;
+        line('M' + x + ' ' + (OY - 56) + 'V' + (OY + (t[1] + 0.12) * H), 'in');
+        dot(x, OY - 56);
+      });
+      line('M' + (OX + 0.5 * W) + ' ' + (OY + 0.86 * H) + 'V' + (OY + H + 56), 'out');
+      dot(OX + 0.5 * W, OY + H + 56);
+    }
+    draw();
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(draw, 150); });
+    window.addEventListener('load', draw);
+  })();
+
   (function () {
     var root = document.documentElement;
     if (!root.classList.contains('js')) return;
@@ -559,44 +600,65 @@
       requestAnimationFrame(frame);
     }
 
-    // A pulse of light runs along the left wire into the badge; the check
-    // glows as it lands and a pulse leaves along the right wire. Each pulse
-    // ticks off the next scenario in the card.
+    // Pulses on the circuit. The middle pair carries the checklist: a pulse
+    // runs into the badge, the check glows, a pulse runs out and the next
+    // scenario is ticked off. Every other wire carries ambient pulses.
+    var svg = document.querySelector('.circuit');
     var items = [].slice.call(document.querySelectorAll('.checks li'));
-    var lane = document.querySelector('.traffic');
     var glow = document.querySelector('.glow');
-    var step = 0;
+    var step = 0, heroOn = true, last = null;
     function mark() {
       items.forEach(function (li, i) {
         li.classList.toggle('done', i < step);
         li.classList.toggle('on', i === step);
       });
     }
-    function travel(from, to, ms, easing, cb) {
-      var d = document.createElement('span'); d.className = 'pulse'; lane.appendChild(d);
-      var a = d.animate([
-        { transform: 'translateX(' + from + 'px)', opacity: 0 },
-        { transform: 'translateX(' + (from + (to - from) * 0.15) + 'px)', opacity: 1, offset: 0.15 },
-        { transform: 'translateX(' + (from + (to - from) * 0.85) + 'px)', opacity: 1, offset: 0.85 },
-        { transform: 'translateX(' + to + 'px)', opacity: 0 }
-      ], { duration: ms, easing: easing });
-      a.onfinish = function () { d.remove(); if (cb) cb(); };
+    function beam(t, msPerPx, cb) {
+      if (!t) { if (cb) cb(); return; }
+      var len = t.getTotalLength(), ms = Math.max(650, len * msPerPx), n = 0;
+      [['tail', 34], ['head', 7]].forEach(function (kind) {
+        var b = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        b.setAttribute('d', t.getAttribute('d'));
+        b.setAttribute('class', 'beam ' + kind[0]);
+        b.style.strokeDasharray = kind[1] + ' ' + (len + 100);
+        svg.appendChild(b);
+        // the head rides at the front of the tail
+        var shift = 34 - kind[1];
+        b.animate([{ strokeDashoffset: 34 - shift }, { strokeDashoffset: -len - shift }],
+                  { duration: ms, easing: 'cubic-bezier(.45,0,.55,1)' })
+          .onfinish = function () { b.remove(); if (++n === 2 && cb) cb(); };
+      });
     }
+    function pick(role) { return svg.querySelector('[data-role="' + role + '"]'); }
     function runChecks() {
-      if (!lane || !lane.animate) return;
+      if (!svg.animate) return;
       mark();
-      var w = lane.offsetWidth;
-      travel(12, 86, 750, 'cubic-bezier(.5,0,.75,0)', function () {
+      beam(pick('main-in'), 6, function () {
         glow.animate([{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 0 }], { duration: 1100, easing: 'ease-out' });
-        travel(w - 86, w - 12, 850, 'cubic-bezier(.25,1,.5,1)');
+        beam(pick('main-out'), 6);
         step++;
         mark();
-        if (step >= items.length) {
-          setTimeout(function () { step = 0; runChecks(); }, 3200);
-        } else {
-          setTimeout(runChecks, 1500);
-        }
+        setTimeout(function () {
+          if (step >= items.length) step = 0;
+          runChecks();
+        }, step >= items.length ? 3200 : 1300);
       });
+    }
+    function ambient() {
+      if (heroOn && !document.hidden) {
+        var ws = svg.querySelectorAll('[data-role="in"], [data-role="out"]'), t;
+        if (ws.length) {
+          do { t = ws[Math.floor(Math.random() * ws.length)]; } while (ws.length > 1 && t === last);
+          last = t; beam(t, 7);
+        }
+      }
+      setTimeout(ambient, 320 + Math.random() * 420);
+    }
+    if (svg.animate) {
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (e) { heroOn = e[0].isIntersecting; }).observe(document.querySelector('.hero'));
+      }
+      setTimeout(ambient, 1000);
     }
 
     // Sample report fills in row by row the first time it scrolls into view.
