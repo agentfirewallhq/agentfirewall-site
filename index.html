@@ -215,6 +215,20 @@
   .copy:hover { background: rgba(255,255,255,.14); }
   .cta .assure { font-size: 0.82rem; color: rgba(255,255,255,.55); margin-top: 22px; }
 
+  /* email chooser */
+  .mailbox { border: 0; border-radius: 20px; padding: 28px; width: min(440px, calc(100vw - 32px)); box-shadow: 0 24px 60px rgba(17,18,20,.24); color: var(--ink); background: var(--card); }
+  .mailbox::backdrop { background: rgba(17,18,20,.42); }
+  .mailbox h3 { font-size: 1.4rem; letter-spacing: -0.02em; }
+  .mailbox p { color: var(--ink-2); font-size: 0.93rem; margin-top: 10px; }
+  .mailbox p b { color: var(--ink); font-weight: 600; }
+  .mailbox-close { position: absolute; top: 14px; right: 14px; }
+  .mailbox-close button { width: 32px; height: 32px; border-radius: 50%; border: 0; background: var(--bg); color: var(--ink-2); font-size: 1.2rem; line-height: 1; cursor: pointer; }
+  .mail-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; }
+  .mail-options a, .mail-options button { display: flex; align-items: center; justify-content: center; min-height: 46px; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: 0.92rem; font-weight: 500; cursor: pointer; text-align: center; }
+  .mail-options a:hover, .mail-options button:hover { border-color: var(--ink); }
+  .mail-options #mailGmail { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .mailbox .mail-hint { color: var(--green); font-weight: 500; }
+
   footer { padding-block: 36px 48px; font-size: 0.86rem; color: var(--ink-3); }
   footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; }
   footer a:hover { color: var(--ink); }
@@ -408,7 +422,6 @@
         <ul><li><svg class="logo" role="img" aria-label="HubSpot"><use href="#l-hubspot"/></svg>HubSpot</li><li><svg class="logo" role="img" aria-label="Intercom"><use href="#l-intercom"/></svg>Intercom</li><li><svg class="logo" role="img" aria-label="Zendesk"><use href="#l-zendesk"/></svg>Zendesk</li><li><svg class="logo" role="img" aria-label="Shopify"><use href="#l-shopify"/></svg>Shopify</li><li><svg class="logo" role="img" aria-label="Notion"><use href="#l-notion"/></svg>Notion</li><li><svg class="logo" role="img" aria-label="GitHub Copilot"><use href="#l-githubcopilot"/></svg>GitHub Copilot</li></ul>
       </div>
     </div>
-    <p class="note">Logos are trademarks of their owners, shown to illustrate the platforms agents are built on. No affiliation or endorsement is implied.</p>
   </div>
 </section>
 
@@ -553,6 +566,19 @@
   </div>
 </section>
 </main>
+
+<dialog class="mailbox" id="mailDlg" aria-labelledby="mailTitle">
+  <form method="dialog" class="mailbox-close"><button aria-label="Close">&times;</button></form>
+  <h3 id="mailTitle">Send your request</h3>
+  <p>Choose how to email <b>hello@agentfirewall.app</b>. The subject and the details we need are already filled in.</p>
+  <div class="mail-options">
+    <a id="mailGmail" target="_blank" rel="noopener">Gmail</a>
+    <a id="mailOutlook" target="_blank" rel="noopener">Outlook</a>
+    <a id="mailApp">Email app</a>
+    <button type="button" id="mailCopy">Copy details</button>
+  </div>
+  <p class="mail-hint" id="mailHint" hidden>Copied. Paste it into a new email to hello@agentfirewall.app.</p>
+</dialog>
 
 <footer>
   <div class="wrap">
@@ -735,6 +761,43 @@
     } else {
       report.classList.add('in');
     }
+  })();
+
+  // Email links only open something when a desktop mail program is set up,
+  // and most people use webmail. On desktop, offer Gmail, Outlook, the mail
+  // app or a copy instead; phones keep the plain mailto, which works there.
+  (function () {
+    var dlg = document.getElementById('mailDlg');
+    if (!dlg || typeof dlg.showModal !== 'function') return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    var to = 'hello@agentfirewall.app', current = { subject: '', body: '' };
+    var enc = encodeURIComponent, hint = document.getElementById('mailHint');
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+      if (!a || dlg.contains(a)) return;
+      e.preventDefault();
+      var q = new URLSearchParams(a.getAttribute('href').split('?')[1] || '');
+      current = { subject: q.get('subject') || '', body: q.get('body') || '' };
+      document.getElementById('mailGmail').href = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + enc(to) + '&su=' + enc(current.subject) + '&body=' + enc(current.body);
+      document.getElementById('mailOutlook').href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + enc(to) + '&subject=' + enc(current.subject) + '&body=' + enc(current.body);
+      document.getElementById('mailApp').href = a.getAttribute('href');
+      hint.hidden = true;
+      dlg.showModal();
+    });
+    document.getElementById('mailApp').addEventListener('click', function () { setTimeout(function () { dlg.close(); }, 100); });
+    ['mailGmail', 'mailOutlook'].forEach(function (id) {
+      document.getElementById(id).addEventListener('click', function () { dlg.close(); });
+    });
+    document.getElementById('mailCopy').addEventListener('click', function () {
+      var text = 'To: ' + to + '\nSubject: ' + current.subject + '\n\n' + current.body;
+      function done() { hint.hidden = false; }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () { window.prompt('Copy this:', text); });
+      else window.prompt('Copy this:', text);
+    });
+    dlg.addEventListener('click', function (e) {
+      var r = dlg.getBoundingClientRect();
+      if (e.target === dlg && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) dlg.close();
+    });
   })();
 
   (function () {
