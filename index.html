@@ -227,14 +227,12 @@
   .js .shield { opacity: 0; transform: scale(.965); }
   .js.loaded .shield { opacity: 1; transform: none; transition: opacity .8s var(--out) .15s, transform 1.2s var(--out) .15s; }
 
-  /* traffic through the shield: clean requests pass behind it, polluted ones are stopped at the edge */
+  /* a pulse of light runs in along the left wire, the check glows, a pulse runs out on the right */
   .shield img { position: relative; z-index: 2; }
   .traffic { position: absolute; left: -72px; right: -72px; top: calc(41% + 4px); height: 0; z-index: 1; pointer-events: none; }
-  .pkt { position: absolute; left: 0; top: 0; border-radius: 50%; opacity: 0; display: grid; place-items: center; will-change: transform, opacity; }
-  .pkt.ok { width: 10px; height: 10px; margin: -5px 0 0 -5px; background: var(--ink-3); }
-  .pkt.bad { width: 22px; height: 22px; margin: -11px 0 0 -11px; background: #e5484d; color: #fff; box-shadow: 0 0 0 3px #fdecec; }
-  .pkt.bad svg { width: 14px; height: 14px; stroke-width: 2.2; }
-  .ring { position: absolute; left: 0; top: 0; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; border: 2px solid #e5484d; opacity: 0; z-index: 3; }
+  .pulse { position: absolute; left: 0; top: 0; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 50%; background: #ffb066; box-shadow: 0 0 6px 2px rgba(239,100,32,.55); opacity: 0; will-change: transform, opacity; }
+  .pulse::before { content: ""; position: absolute; right: 3px; top: 50%; width: 30px; height: 2px; margin-top: -1px; border-radius: 2px; background: linear-gradient(90deg, rgba(239,100,32,0), rgba(239,100,32,.8)); }
+  .glow { position: absolute; left: 54%; top: 45%; width: 70%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255,170,90,.55) 0%, rgba(255,140,50,.18) 35%, rgba(255,140,50,0) 62%); mix-blend-mode: screen; opacity: 0; z-index: 3; pointer-events: none; }
   .checks li { transition: color .3s ease; }
   .checks li::before { transition: background-color .3s ease, box-shadow .3s ease, transform .3s var(--spring); }
   .js .checks li { color: var(--ink-3); }
@@ -269,7 +267,6 @@
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
   <symbol id="i-dollar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></symbol>
   <symbol id="i-user" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></symbol>
-  <symbol id="i-hazard" viewBox="0 0 24 24"><circle cx="12" cy="11.9" r="2"/><path d="M6.7 3.4c-.9 2.5 0 5.2 2.2 6.7C6.5 9 3.7 9.6 2 11.6"/><path d="m8.9 10.1 1.4.8"/><path d="M17.3 3.4c.9 2.5 0 5.2-2.2 6.7 2.4-1.2 5.2-.6 6.9 1.5"/><path d="m15.1 10.1-1.4.8"/><path d="M16.7 20.8c-2.6-.4-4.6-2.6-4.7-5.3-.2 2.6-2.1 4.8-4.7 5.2"/><path d="M12 13.9v1.6"/><path d="M13.5 5.4c-1-.2-2-.2-3 0"/><path d="M17 16.4c.7-.7 1.2-1.6 1.5-2.5"/><path d="M5.5 13.9c.3.9.8 1.8 1.5 2.5"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
 </svg>
 
@@ -335,6 +332,7 @@
         <svg class="wire r" viewBox="0 0 72 8"><path d="M4 4H72"/><circle cx="4" cy="4" r="2.5"/></svg>
         <div class="traffic" aria-hidden="true"></div>
         <img src="assets/hero-shield.webp" alt="" width="720" height="844">
+        <span class="glow" aria-hidden="true"></span>
       </div>
     </div>
 
@@ -561,11 +559,12 @@
       requestAnimationFrame(frame);
     }
 
-    // Traffic through the shield. Clean requests enter on the left, pass behind
-    // the badge and leave on the right as green. A polluted request is stopped
-    // at the edge; each one stopped ticks off the next scenario in the card.
+    // A pulse of light runs along the left wire into the badge; the check
+    // glows as it lands and a pulse leaves along the right wire. Each pulse
+    // ticks off the next scenario in the card.
     var items = [].slice.call(document.querySelectorAll('.checks li'));
     var lane = document.querySelector('.traffic');
+    var glow = document.querySelector('.glow');
     var step = 0;
     function mark() {
       items.forEach(function (li, i) {
@@ -573,60 +572,31 @@
         li.classList.toggle('on', i === step);
       });
     }
-    function el(cls, html) {
-      var d = document.createElement('span'); d.className = cls; if (html) d.innerHTML = html;
-      lane.appendChild(d); return d;
-    }
-    function clean() {
-      var w = lane.offsetWidth, dot = el('pkt ok');
-      var green = getComputedStyle(root).getPropertyValue('--green');
-      var a = dot.animate([
-        { transform: 'translateX(12px)', opacity: 0 },
-        { transform: 'translateX(26px)', opacity: 1, offset: 0.08 },
-        { transform: 'translateX(' + (w / 2) + 'px)', backgroundColor: getComputedStyle(dot).backgroundColor, offset: 0.5 },
-        { transform: 'translateX(' + (w / 2) + 'px)', backgroundColor: green, offset: 0.501 },
-        { transform: 'translateX(' + (w - 26) + 'px)', opacity: 1, backgroundColor: green, offset: 0.92 },
-        { transform: 'translateX(' + (w - 12) + 'px)', opacity: 0, backgroundColor: green }
-      ], { duration: 2000, easing: 'linear' });
-      a.onfinish = function () { dot.remove(); };
-    }
-    function polluted(done) {
-      var bad = el('pkt bad', '<svg class="i"><use href="#i-hazard"/></svg>');
-      var a = bad.animate([
-        { transform: 'translateX(12px) scale(.6)', opacity: 0 },
-        { transform: 'translateX(22px) scale(1)', opacity: 1, offset: 0.15 },
-        { transform: 'translateX(58px) scale(1)', opacity: 1, offset: 0.85 },
-        { transform: 'translateX(62px) scale(1)', opacity: 1 }
-      ], { duration: 900, easing: 'cubic-bezier(.4,0,.6,1)', fill: 'forwards' });
-      a.onfinish = function () {
-        var ring = el('ring');
-        ring.animate([
-          { transform: 'translateX(62px) scale(1)', opacity: 1 },
-          { transform: 'translateX(62px) scale(2.2)', opacity: 0 }
-        ], { duration: 700, easing: 'cubic-bezier(.22,1,.36,1)' }).onfinish = function () { ring.remove(); };
-        bad.animate([
-          { transform: 'translateX(62px) scale(1)', opacity: 1 },
-          { transform: 'translateX(54px) scale(1)', opacity: 1, offset: 0.35 },
-          { transform: 'translateX(50px) scale(.4)', opacity: 0 }
-        ], { duration: 520, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' }).onfinish = function () { bad.remove(); };
-        done();
-      };
+    function travel(from, to, ms, easing, cb) {
+      var d = document.createElement('span'); d.className = 'pulse'; lane.appendChild(d);
+      var a = d.animate([
+        { transform: 'translateX(' + from + 'px)', opacity: 0 },
+        { transform: 'translateX(' + (from + (to - from) * 0.15) + 'px)', opacity: 1, offset: 0.15 },
+        { transform: 'translateX(' + (from + (to - from) * 0.85) + 'px)', opacity: 1, offset: 0.85 },
+        { transform: 'translateX(' + to + 'px)', opacity: 0 }
+      ], { duration: ms, easing: easing });
+      a.onfinish = function () { d.remove(); if (cb) cb(); };
     }
     function runChecks() {
       if (!lane || !lane.animate) return;
       mark();
-      clean();
-      setTimeout(function () {
-        polluted(function () {
-          step++;
-          mark();
-          if (step >= items.length) {
-            setTimeout(function () { step = 0; runChecks(); }, 3200);
-          } else {
-            setTimeout(runChecks, 1100);
-          }
-        });
-      }, 900);
+      var w = lane.offsetWidth;
+      travel(12, 86, 750, 'cubic-bezier(.5,0,.75,0)', function () {
+        glow.animate([{ opacity: 0 }, { opacity: 1, offset: 0.2 }, { opacity: 0 }], { duration: 1100, easing: 'ease-out' });
+        travel(w - 86, w - 12, 850, 'cubic-bezier(.25,1,.5,1)');
+        step++;
+        mark();
+        if (step >= items.length) {
+          setTimeout(function () { step = 0; runChecks(); }, 3200);
+        } else {
+          setTimeout(runChecks, 1500);
+        }
+      });
     }
 
     // Sample report fills in row by row the first time it scrolls into view.
