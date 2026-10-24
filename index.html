@@ -157,7 +157,17 @@
   .tier p { color: var(--ink-2); font-size: 0.95rem; margin-top: 14px; }
   .tier .amount { margin-top: auto; padding-top: 26px; font-size: 1.6rem; font-weight: 500; letter-spacing: -0.04em; }
   .tier .amount small { font-size: 0.85rem; color: var(--ink-3); letter-spacing: 0; font-weight: 400; }
+  .scope { list-style: none; margin: 18px 0 0; padding: 18px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; font-size: 0.9rem; color: var(--ink-2); }
+  .scope li { display: grid; grid-template-columns: 16px 1fr; gap: 10px; align-items: start; }
+  .scope svg { width: 16px; height: 16px; color: var(--accent); margin-top: 2px; stroke-width: 2.5; }
+  .tier-btn { align-self: flex-start; margin-top: 18px; font-size: 0.9rem; }
+  .bridge { display: inline-block; background: var(--accent-soft); border-radius: 10px; padding: 10px 14px; }
+  .head p.bridge { font-size: 0.93rem; margin-top: 20px; }
+  .bridge a { color: var(--accent); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
   .tier.dark { background: var(--navy); color: #fff; }
+  .tier.dark .scope { border-top-color: rgba(255,255,255,.14); color: rgba(255,255,255,.8); }
+  .tier.dark .scope svg { color: #ffa36b; }
+  .tier.dark .pill { background: #fff; color: var(--ink); box-shadow: none; }
   .tier.dark .ic { background: rgba(255,255,255,.1); }
   .tier.dark p, .tier.dark .amount small { color: rgba(255,255,255,.72); }
   .tier.dark .when { color: #ffa36b; }
@@ -407,25 +417,32 @@
       <span class="kicker"><b>Pricing</b> Three ways in</span>
       <h2>Start Small. Go Deeper If You Need To.</h2>
       <p>Every engagement is consent-based: you show us how your agents work, and we only work inside the access you give us.</p>
+      <p class="bridge">Already ran the <a href="#pilot">$150 pilot</a>? It counts in full toward the Security Audit.</p>
     </div>
     <div class="tiers">
       <div class="card tier">
         <span class="ic"><svg class="i"><use href="#i-scan"/></svg></span>
         <h3>Workflow Testing</h3><div class="when">A quick read on where you stand</div>
         <p>We run your agent through scenarios we agree on together and report every place it does something it shouldn't.</p>
+        <ul class="scope"><li><svg class="i"><use href="#i-check"/></svg>Scenarios agreed with you up front</li><li><svg class="i"><use href="#i-check"/></svg>Every place it does something it shouldn&#39;t, reported</li></ul>
         <div class="amount"><small>from</small> $300</div>
+        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Workflow%20testing&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20book%20workflow%20testing.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Book workflow testing <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
       </div>
       <div class="card tier dark">
         <span class="ic"><svg class="i"><use href="#i-shield"/></svg></span>
         <h3>Security Audit</h3><div class="when">The full picture</div>
         <p>You walk us through how your business uses agents. We map every weakness into a plain-language report, ranked by severity, with fixes.</p>
+        <ul class="scope"><li><svg class="i"><use href="#i-check"/></svg>Every weakness ranked by severity</li><li><svg class="i"><use href="#i-check"/></svg>Plain-language report with the exact fixes</li></ul>
         <div class="amount"><small>from</small> $1,500</div>
+        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Security%20audit&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20book%20the%20security%20audit.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Book the audit <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
       </div>
       <div class="card tier">
         <span class="ic"><svg class="i"><use href="#i-lock"/></svg></span>
         <h3>Safety Setup</h3><div class="when">Fixes that stay fixed</div>
         <p>Approval gates, blocked actions and audit logs around the automations you already run, plus monitoring as your agent changes.</p>
+        <ul class="scope"><li><svg class="i"><use href="#i-check"/></svg>Approval gates, blocked actions and audit logs</li><li><svg class="i"><use href="#i-check"/></svg>Re-tested to prove each gap is closed, then monitored</li></ul>
         <div class="amount">$500 <small>setup + monthly</small></div>
+        <a class="pill tier-btn" href="mailto:hello@agentfirewall.app?subject=Safety%20setup&amp;body=Hi%2C%0A%0AI%27d%20like%20to%20set%20up%20guardrails%20for%20our%20agent.%0A%0AAgent%20URL%20or%20demo%20link%3A%0AWhat%20the%20agent%20does%20%28one%20or%20two%20lines%29%3A%0AWhat%20it%20can%20act%20on%20%28refunds%2C%20payments%2C%20customer%20data%2C%20email%2C%20other%29%3A%0A%0AThanks%2C%0A">Set up guardrails <span class="arrow"><svg class="i"><use href="#i-arrow"/></svg><svg class="i"><use href="#i-arrow"/></svg></span></a>
       </div>
     </div>
   </div>
