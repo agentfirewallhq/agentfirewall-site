@@ -7,7 +7,7 @@ Static site for agentfirewall.app, hosted on Vercel. The Vercel project deploys 
 - robots.txt and sitemap.xml: crawler rules and the sitemap (add any new page to sitemap.xml).
 - assets/og.png: 1200x630 share image used by the Open Graph and Twitter tags.
 
-The break-in video section slots in once the video is published.
+The proof video (YouTube 9MXzONqbyms) sits in the proof section as a click-to-load embed; assets/video-poster.jpg is its poster.
 
 Credits:
 - Font: Inter Tight (SIL Open Font License), self-hosted in assets/fonts.

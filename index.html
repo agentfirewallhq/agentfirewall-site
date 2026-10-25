@@ -161,6 +161,22 @@
      }
     }
    ]
+  },
+  {
+   "@type": "VideoObject",
+   "@id": "https://agentfirewall.app/#video",
+   "name": "AI Agent Prompt Injection: 100/100 Without a Firewall, DENIED With One",
+   "description": "Hidden text in a web page, a tool description, a rules file and a PDF tricks AI agents in Lakera's public Agent Breaker game (100/100). Then the same kind of tests on a test agent with fake data and Agent Firewall on: direct, tool and indirect requests all denied, model not called, every decision in the audit log.",
+   "thumbnailUrl": [
+    "https://agentfirewall.app/assets/video-poster.jpg",
+    "https://i.ytimg.com/vi/9MXzONqbyms/maxresdefault.jpg"
+   ],
+   "uploadDate": "2026-10-25",
+   "duration": "PT2M53S",
+   "embedUrl": "https://www.youtube.com/embed/9MXzONqbyms",
+   "publisher": {
+    "@id": "https://agentfirewall.app/#org"
+   }
   }
  ]
 }
@@ -314,6 +330,19 @@
   .finding p { margin-top: 6px; color: var(--ink-2); }
   .finding p b { color: var(--ink); }
   .note { font-size: 0.84rem; color: var(--ink-3); margin-top: 16px; }
+
+  /* proof: video */
+  .video { margin: 40px 0 0; }
+  .video-play { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; background: #0a0b10; box-shadow: 0 1px 2px rgba(17,18,20,.06), 0 18px 40px rgba(17,18,20,.16); }
+  .video-play img, .video iframe { display: block; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .video iframe { aspect-ratio: 16 / 9; height: auto; border-radius: 16px; background: #0a0b10; }
+  .play-btn { position: absolute; left: 50%; top: 50%; width: 84px; height: 84px; margin: -42px 0 0 -42px; border-radius: 50%; background: var(--accent); display: grid; place-items: center; box-shadow: 0 10px 30px rgba(239,100,32,.45); transition: transform .2s ease; }
+  .play-btn svg { width: 34px; height: 34px; fill: #fff; margin-left: 4px; }
+  .video-play:hover .play-btn, .video-play:focus-visible .play-btn { transform: scale(1.08); }
+  .video-len { position: absolute; right: 14px; bottom: 14px; background: rgba(10,11,16,.85); color: #fff; font-size: 0.82rem; font-weight: 600; padding: 4px 9px; border-radius: 6px; }
+  .video figcaption { margin-top: 14px; }
+  .video figcaption a { color: var(--accent); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 600px) { .play-btn { width: 64px; height: 64px; margin: -32px 0 0 -32px; } .play-btn svg { width: 26px; height: 26px; } }
 
   /* proof: tool leak */
   .leak { margin: 56px 0 0; display: grid; gap: 28px; align-items: center; }
@@ -644,8 +673,16 @@
     <div class="head">
       <span class="kicker"><b>Proof</b> Sample report</span>
       <h2>A Sample AI Agent Security Report.</h2>
-      <p>Every finding says what happened, what it could cost you, and the exact fix. Here's an excerpt.</p>
+      <p>Watch a 3-minute test first, then see what a report looks like. Every finding says what happened, what it could cost you, and the exact fix.</p>
     </div>
+    <figure class="video">
+      <a class="video-play" href="https://www.youtube.com/watch?v=9MXzONqbyms" data-yt="9MXzONqbyms" aria-label="Play video: AI agent prompt injection test, 2 minutes 53 seconds">
+        <img src="assets/video-poster.jpg" width="1280" height="720" loading="lazy" alt="Split screen: no firewall, 100 out of 100 in a public demo; firewall on, DENIED.">
+        <span class="play-btn" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+        <span class="video-len">2:53</span>
+      </a>
+      <figcaption class="note">Hidden text wins 100/100 in Lakera's public practice game. Then my own test agent (fake data only) with Agent Firewall on: all three requests denied, logged in the audit trail. <a href="https://www.youtube.com/watch?v=9MXzONqbyms">Watch on YouTube</a></figcaption>
+    </figure>
     <div class="card report">
       <div class="report-head"><strong>Summary of results</strong><span class="badge pass"><svg class="i"><use href="#i-check"/></svg>15 of 15 passed</span></div>
       <div class="row"><span class="area">Authentication</span><span class="what">No key, wrong key</span><span class="badge held">Denied</span></div>
@@ -1014,6 +1051,22 @@
     dlg.addEventListener('click', function (e) {
       var r = dlg.getBoundingClientRect();
       if (e.target === dlg && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) dlg.close();
+    });
+  })();
+
+  // Load the YouTube player only when the visitor presses play.
+  (function () {
+    [].forEach.call(document.querySelectorAll('.video-play[data-yt]'), function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/' + a.getAttribute('data-yt') + '?autoplay=1&rel=0&modestbranding=1';
+        f.title = 'Agent Firewall proof video';
+        f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        f.allowFullscreen = true;
+        a.replaceWith(f);
+        f.focus();
+      });
     });
   })();
 
